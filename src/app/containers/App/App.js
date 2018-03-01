@@ -12,6 +12,7 @@ import CreateWallet from '../CreateWallet'
 import ImportWallet from '../ImportWallet'
 import ExportWallet from '../ExportWallet'
 import Config from '../Config'
+import NeoDun from '../NeoDun'
 
 import Header from '../../components/Header'
 import ContentWrapper from '../../components/ContentWrapper'
@@ -38,6 +39,7 @@ export default class App extends Component {
             <Route path='/importWallet' component={ ImportWallet } />
             <Route path='/exportWallet' component={ ExportWallet } />
             <Route path='/config' component={ Config } />
+            <Route path='/neodun' component={ NeoDun } />
             <Route path='/' component={ Home } />
           </ConnectedSwitch>
         </ContentWrapper>
