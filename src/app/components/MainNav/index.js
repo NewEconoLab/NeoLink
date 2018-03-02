@@ -59,7 +59,7 @@ class MainNav extends Component {
             <MenuItem className={ style.menuItem } onClick={ () => history.push('/config') }>
               Config
             </MenuItem>
-            <MenuItem className={ style.menuItem } onClick={ () => history.push('/neodun') }>
+            <MenuItem className={ style.menuItem } onClick={ () => history.push('/neoDun') }>
               NeoDun
             </MenuItem>
           </Menu>

@@ -39,7 +39,7 @@ export default class App extends Component {
             <Route path='/importWallet' component={ ImportWallet } />
             <Route path='/exportWallet' component={ ExportWallet } />
             <Route path='/config' component={ Config } />
-            <Route path='/neodun' component={ NeoDun } />
+            <Route path='/neoDun' component={ NeoDun } />
             <Route path='/' component={ Home } />
           </ConnectedSwitch>
         </ContentWrapper>
