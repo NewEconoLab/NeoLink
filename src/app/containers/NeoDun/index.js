@@ -71,8 +71,6 @@ export default class NeoDun extends Component {
       .then((result) => {
         NEOs[index] = toBigNumber(result.assets.NEO.balance).toString()
         GASs[index] = toBigNumber(result.assets.GAS.balance).round(8).toString()
- 
-        api.neonDB.doSendAsset()
 
         this.updateAddrBlance(NEOs,GASs);
       })
