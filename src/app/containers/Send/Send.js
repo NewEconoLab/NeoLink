@@ -12,6 +12,8 @@ import '@material/select/dist/mdc.select.min.css'
 
 import { toNumber, toBigNumber } from '../../utils/math'
 
+import axios from 'axios'
+
 export class Send extends Component {
   state = {
     errorMsg: '',
@@ -122,7 +124,36 @@ export class Send extends Component {
 
     let amounts = {}
     amounts[assetType] = toNumber(amount)
-    api.neonDB.doSendAsset(networks[selectedNetworkId].url, address, account.wif, amounts)
+    var txid = ''
+    var err = ''
+    if(!account.wif){
+      var assetID = ''
+      if (assetType=='NEO'){
+        assetID='0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b'
+      }
+      else if (assetType == 'GAS')
+      {
+        assetID='0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7'
+      }
+
+      axios.post('http://api.nel.group/api/testnet', {
+        jsonrpc: '2.0',
+        method: 'gettransfertxhex',
+        params: [account.address,address,assetID,toNumber(amount)],
+        id: '1'
+      })
+      .then(function (response) {
+        console.log(response);
+        txid = response.data.result[0].transfertxhex
+      })
+      .catch(function (error) {
+        console.log(error)
+        err = error.message
+      })
+    }
+    else
+    {
+      api.neonDB.doSendAsset(networks[selectedNetworkId].url, address, account.wif, amounts)
       .then((result) => {
         console.log(result)
         this.setState({
@@ -138,6 +169,13 @@ export class Send extends Component {
           errorMsg: e.message,
         })
       })
+    }
+
+    this.setState({
+      loading: false,
+      txid: txid,
+    })
+    reset()
   }
 
   render() {
