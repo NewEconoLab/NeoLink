@@ -9,7 +9,8 @@ function withLoginCheck(Component) {
     render() {
       const { account } = this.props
 
-      if (!account || !account.wif) {
+      if (!account || !account.address) {
+      //if (!account || !account.wif) {
         return <Login />
       } else {
         return <Component { ...this.props } />

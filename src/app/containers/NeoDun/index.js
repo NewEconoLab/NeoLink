@@ -100,7 +100,8 @@ export default class NeoDun extends Component {
 
     return (
       <div>
-        <p>{account.address}</p>
+        <p>account_wif:<br />{account.wif}</p>
+        <p>account_addr:<br />{account.address}</p>
         <Button raised ripple onClick={() => this.showAddrList() }>
           List NeoDun Address
         </Button>

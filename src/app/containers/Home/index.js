@@ -32,15 +32,22 @@ class Home extends Component {
 
   render() {
     const { account } = this.props
-    const myAccount = Neon.create.account(account.wif)
+    var addr = account.address
+    var pubkey = 'Private key protected by hardware wallet'
+    if (account.wif != '')
+    {
+      var myAccount = Neon.create.account(account.wif)
+      pubkey = myAccount.getPublicKey(true)
+    }
+    
     return (
       <div>
         <Button ripple raised onClick={ this.handleClick }>
           Logout
         </Button>
         <div className={ style.accountInfoContainer }>
-          <div className={ style.accountInfo }><span className={ style.breakWord }>Address: {myAccount.address}</span></div>
-          <div className={ style.accountInfo } style={ { marginTop: '10px' } }><span className={ style.breakWord }>Public key encoded: {myAccount.getPublicKey(true)}</span></div>
+          <div className={ style.accountInfo }><span className={ style.breakWord }>Address: {addr}</span></div>
+          <div className={ style.accountInfo } style={ { marginTop: '10px' } }><span className={ style.breakWord }>Public key encoded:<br/> {pubkey}</span></div>
         </div>
       </div>
     )
