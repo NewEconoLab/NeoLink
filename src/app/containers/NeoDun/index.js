@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 
 import { api } from '@cityofzion/neon-js'
+
 import { Button } from 'rmwc/Button'
 import { TextField } from 'rmwc/TextField'
 import '@material/button/dist/mdc.button.min.css'
@@ -11,10 +12,17 @@ import '@material/textfield/dist/mdc.textfield.min.css'
 
 import { toBigNumber } from '../../utils/math'
 
+import { bindActionCreators } from 'redux'
+import * as AccountActions from '../../actions/account'
+
  @connect(
   state => ({
     selectedNetworkId: state.config.selectedNetworkId,
     networks: state.config.networks,
+    account: state.account,
+  }),
+  dispatch => ({
+    actions: bindActionCreators(AccountActions, dispatch),
   })
 )
  
@@ -50,6 +58,9 @@ export default class NeoDun extends Component {
           addrs: res.data.addresses,
         })
         this.getAddrBalance()
+
+        const { actions } = this.props
+        actions.setAccount('', this.state.addrs[0].address)
       });
 
       //return 'this is list.'
@@ -84,10 +95,12 @@ export default class NeoDun extends Component {
   }
 
   render() {
+    const { account } = this.props
     const { loading, haveAddress, errorMsg,  addrs, NEOs, GASs } = this.state
 
     return (
       <div>
+        <p>{account.address}</p>
         <Button raised ripple onClick={() => this.showAddrList() }>
           List NeoDun Address
         </Button>
@@ -114,4 +127,6 @@ export default class NeoDun extends Component {
 NeoDun.propTypes = {
   selectedNetworkId: PropTypes.string,
   networks: PropTypes.object,
+  account: PropTypes.object,
+  actions: PropTypes.object,
 }
