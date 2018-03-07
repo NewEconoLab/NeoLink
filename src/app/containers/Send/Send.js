@@ -124,8 +124,6 @@ export class Send extends Component {
 
     let amounts = {}
     amounts[assetType] = toNumber(amount)
-    var txid = ''
-    var err = ''
     if(!account.wif){
       var assetID = ''
       if (assetType=='NEO'){
@@ -142,15 +140,57 @@ export class Send extends Component {
         params: [account.address,address,assetID,toNumber(amount)],
         id: '1'
       })
-      .then(function (response) {
-        console.log(response);
-        txid = response.data.result[0].transfertxhex
+      .then(response => {
+        console.log(response)
+
+        var transfertxhex = response.data.result[0].transfertxhex
+        axios.get("http://127.0.0.1:50288/_api/sign?data=" + transfertxhex + "&source=" + account.address)
+        .then(res =>{
+          console.log(res)
+          var sign = res.data.signdata.toString().toLowerCase()
+          var pubkey = res.data.pubkey.toString().toLowerCase()
+          console.log(sign)
+          console.log(pubkey)
+
+            axios.post('http://api.nel.group/api/testnet', {
+              jsonrpc: '2.0',
+              method: 'sendtxplussign',
+              params: [transfertxhex,sign,pubkey],
+              id: '1'
+            })
+            .then(r => {
+              console.log(r)
+              this.setState({
+                loading: false,
+                txid: r.data.result[0].txid,
+              })
+              console.log(this.state.txid)
+              reset() 
+            })
+            .catch( e => {
+              console.log(e)
+              this.setState({
+                loading: false,
+                errorMsg: e.message,
+              })
+            })
+        })
+        .catch( e => {
+          console.log(e)
+          this.setState({
+            loading: false,
+            errorMsg: e.message,
+          })
+        })
       })
-      .catch(function (error) {
-        console.log(error)
-        err = error.message
+      .catch( e => {
+        console.log(e)
+        this.setState({
+          loading: false,
+          errorMsg: e.message,
+        })
       })
-    }
+     }
     else
     {
       api.neonDB.doSendAsset(networks[selectedNetworkId].url, address, account.wif, amounts)
@@ -169,13 +209,7 @@ export class Send extends Component {
           errorMsg: e.message,
         })
       })
-    }
-
-    this.setState({
-      loading: false,
-      txid: txid,
-    })
-    reset()
+    } 
   }
 
   render() {

@@ -98,9 +98,12 @@ export default class NeoDun extends Component {
     const { account } = this.props
     const { loading, haveAddress, errorMsg,  addrs, NEOs, GASs } = this.state
 
+    var isHaveWif = false
+    if (!!account.wif) { isHaveWif = true }
+
     return (
       <div>
-        <p>account_wif:<br />{account.wif}</p>
+        <p>account_wif: {isHaveWif.toString()}</p>
         <p>account_addr:<br />{account.address}</p>
         <Button raised ripple onClick={() => this.showAddrList() }>
           List NeoDun Address
